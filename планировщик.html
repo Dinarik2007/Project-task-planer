@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -733,6 +732,7 @@
         deadline,
         status: "Новая",
         comment: "",
+        fileLink: "",
         createdAt: new Date().toISOString(),
         completedAt: "",
         createdBy: currentUser,
@@ -862,6 +862,7 @@
             task.title,
             task.description,
             task.comment,
+            task.fileLink,
             task.responsible,
             task.priority,
             task.status
@@ -990,9 +991,20 @@
       textarea.disabled = !canEditTask(task);
       card.appendChild(textarea);
 
+      const fileLabel = createElement("label", "", "Ссылка на файл");
+      card.appendChild(fileLabel);
+
+      const fileInput = createElement("input");
+      fileInput.id = `filelink-${task.id}`;
+      fileInput.type = "url";
+      fileInput.placeholder = "Например: https://drive.google.com/file/...";
+      fileInput.value = task.fileLink || "";
+      fileInput.disabled = !canEditTask(task);
+      card.appendChild(fileInput);
+
       const actions = createElement("div");
 
-      const saveBtn = createButton("Сохранить комментарий", "btn-small", () => saveComment(task.id));
+      const saveBtn = createButton("Сохранить комментарий и ссылку", "btn-small", () => saveComment(task.id));
       saveBtn.disabled = !canEditTask(task);
       actions.appendChild(saveBtn);
 
@@ -1021,6 +1033,20 @@
         commentBox.appendChild(document.createElement("br"));
         commentBox.append(task.comment);
         card.appendChild(commentBox);
+      }
+
+      if (task.fileLink) {
+        const linkBox = createElement("div", "comment-box");
+        const bold = createElement("b", "", "Файл:");
+        const link = createElement("a");
+        link.href = formatLink(task.fileLink);
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = task.fileLink;
+        linkBox.appendChild(bold);
+        linkBox.appendChild(document.createElement("br"));
+        linkBox.appendChild(link);
+        card.appendChild(linkBox);
       }
 
       return card;
@@ -1072,11 +1098,19 @@
       if (!task || !canEditTask(task)) return;
 
       const comment = getById(`comment-${taskId}`).value.trim();
+      const fileLink = getById(`filelink-${taskId}`).value.trim();
       task.comment = comment;
-      addHistory(task, "Комментарий обновлён");
+      task.fileLink = fileLink;
+      addHistory(task, "Комментарий и ссылка обновлены");
 
       saveTasks();
       renderAll();
+    }
+
+    function formatLink(url) {
+      if (!url) return "";
+      if (/^https?:\/\//i.test(url)) return url;
+      return `https://${url}`;
     }
 
     function setStatus(taskId, newStatus) {
@@ -1226,6 +1260,7 @@
         "Срок",
         "Статус",
         "Комментарий",
+        "Ссылка на файл",
         "Создано",
         "Выполнено"
       ];
@@ -1238,6 +1273,7 @@
         task.deadline,
         task.status,
         task.comment || "",
+        task.fileLink || "",
         formatDate(task.createdAt),
         task.completedAt ? formatDate(task.completedAt) : ""
       ]);
