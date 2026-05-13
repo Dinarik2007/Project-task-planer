@@ -1,0 +1,1334 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Планировщик задач отдела маркетинга</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --green: #23402b;
+      --green-light: #30593b;
+      --bg: #f3f5f7;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --red: #dc2626;
+      --orange: #d97706;
+      --blue: #2563eb;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    .landing {
+      background: linear-gradient(135deg, #1f3a28 0%, #2f6a46 100%);
+      color: white;
+      padding: 64px 16px 48px;
+    }
+
+    .landing-inner {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .landing h1 {
+      margin: 0 0 12px;
+      font-size: 40px;
+      line-height: 1.15;
+    }
+
+    .landing p {
+      margin: 0 0 20px;
+      font-size: 17px;
+      opacity: 0.95;
+    }
+
+    .landing-features {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .landing-feature {
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(255,255,255,0.08);
+      font-size: 14px;
+    }
+
+    .landing-aside {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 16px;
+      padding: 22px;
+      backdrop-filter: blur(2px);
+    }
+
+    .landing-aside h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+
+    .landing-aside ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .landing-aside li {
+      margin: 0 0 8px;
+      font-size: 14px;
+    }
+
+    .landing-actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-hero {
+      background: white;
+      color: #163622;
+      padding: 12px 16px;
+    }
+
+    .btn-hero-outline {
+      background: transparent;
+      color: white;
+      border: 1px solid rgba(255,255,255,0.35);
+      padding: 12px 16px;
+    }
+
+    .app-header {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 20px 16px;
+      text-align: center;
+    }
+
+    .app-header h2 {
+      margin: 0 0 4px;
+      font-size: 28px;
+    }
+
+    .app-header p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    body.director-alert {
+      animation: greenFlash 0.8s infinite;
+    }
+
+    @keyframes greenFlash {
+      0% { background: #f3f5f7; }
+      50% { background: #b7f7c1; }
+      100% { background: #f3f5f7; }
+    }
+
+    header {
+      background: var(--green);
+      color: white;
+      padding: 24px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 0;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 24px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 22px;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+    }
+
+    label {
+      display: block;
+      margin-top: 14px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      margin-top: 6px;
+      padding: 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 14px;
+      background: white;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      width: 100%;
+      margin-top: 18px;
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--green-light);
+    }
+
+    .btn-small {
+      background: #e5e7eb;
+      color: #111827;
+      margin-top: 8px;
+      margin-right: 6px;
+    }
+
+    .btn-done {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .btn-delete {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .btn-export {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-warning {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .role-box {
+      background: #f9fafb;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .director-notice {
+      display: none;
+      margin-bottom: 16px;
+      padding: 14px;
+      border-radius: 12px;
+      background: #d1fae5;
+      color: #065f46;
+      font-weight: bold;
+      border: 2px solid #10b981;
+      animation: noticeBlink 0.8s infinite;
+    }
+
+    .director-notice.active {
+      display: block;
+    }
+
+    @keyframes noticeBlink {
+      0% { opacity: 1; }
+      50% { opacity: 0.45; }
+      100% { opacity: 1; }
+    }
+
+    .team-list {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .employee {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f9fafb;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .employee small {
+      color: var(--muted);
+      display: block;
+      margin-top: 4px;
+    }
+
+    .bell {
+      font-size: 22px;
+      opacity: 0.3;
+    }
+
+    .bell.active {
+      opacity: 1;
+      animation: ring 0.8s infinite;
+    }
+
+    @keyframes ring {
+      0% { transform: rotate(0deg); }
+      25% { transform: rotate(12deg); }
+      50% { transform: rotate(0deg); }
+      75% { transform: rotate(-12deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    .filters {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filters select,
+    .filters input {
+      width: auto;
+      min-width: 170px;
+      margin-top: 0;
+    }
+
+    .search-row {
+      flex: 1 1 220px;
+    }
+
+    .search-row input {
+      width: 100%;
+    }
+
+    .task {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 14px;
+      background: white;
+    }
+
+    .task-overdue {
+      border-left: 5px solid var(--red);
+      background: #fef2f2;
+    }
+
+    .task-today {
+      border-left: 5px solid var(--orange);
+      background: #fffbeb;
+    }
+
+    .task-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .task-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 0 0 8px;
+    }
+
+    .task-desc {
+      margin: 8px 0;
+      line-height: 1.5;
+      color: #374151;
+      white-space: pre-wrap;
+    }
+
+    .meta {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .status,
+    .priority {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: bold;
+      white-space: nowrap;
+      margin-left: 4px;
+    }
+
+    .status-new {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-progress {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .status-done {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .priority-high {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .priority-medium {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .priority-low {
+      background: #e0f2fe;
+      color: #075985;
+    }
+
+    .comment-box {
+      margin-top: 12px;
+      padding: 12px;
+      background: #f9fafb;
+      border-radius: 12px;
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 30px;
+      background: white;
+      border-radius: 14px;
+    }
+
+    .deadline-overdue {
+      color: #b91c1c;
+      font-weight: bold;
+    }
+
+    .deadline-today {
+      color: #b45309;
+      font-weight: bold;
+    }
+
+    .log {
+      max-height: 260px;
+      overflow: auto;
+      background: #f9fafb;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .log-item {
+      border-bottom: 1px solid var(--border);
+      padding: 8px 0;
+    }
+
+    .log-item:last-child {
+      border-bottom: none;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      .landing-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .landing h1 {
+        font-size: 32px;
+      }
+
+      .landing-features {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      .filters select,
+      .filters input,
+      .filters button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <section class="landing">
+    <div class="landing-inner">
+      <div>
+        <h1>Планировщик задач отдела маркетинга</h1>
+        <p>Готовый рабочий лендинг и приложение в одном экране: ставьте задачи, отслеживайте статусы, фиксируйте комментарии и держите всю команду в едином контуре.</p>
+        <div class="landing-actions">
+          <button class="btn-hero" onclick="scrollToPlanner()">Перейти к планировщику</button>
+          <button class="btn-hero-outline" onclick="scrollToPlanner(true)">Сразу в список задач</button>
+        </div>
+        <div class="landing-features">
+          <div class="landing-feature">Роли сотрудников и директора с разными правами</div>
+          <div class="landing-feature">Статусы, приоритеты, дедлайны и история изменений</div>
+          <div class="landing-feature">Фильтрация и поиск по задачам и комментариям</div>
+          <div class="landing-feature">Экспорт и импорт в CSV/JSON для резервных копий</div>
+        </div>
+      </div>
+      <aside class="landing-aside">
+        <h3>Что внутри</h3>
+        <ul>
+          <li>Постановка задач директором и контроль исполнения</li>
+          <li>Работа ответственных по своим задачам и комментариям</li>
+          <li>Уведомление о завершении и журнал действий</li>
+          <li>Сортировка по статусу, срокам и приоритету</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <header class="app-header" id="plannerStart">
+    <h2>Рабочая область планировщика</h2>
+    <p>Ниже находится полноценный функционал управления задачами</p>
+  </header>
+
+  <main class="container" id="plannerApp">
+    <section class="card">
+      <div class="role-box">
+        <h2>Режим работы</h2>
+
+        <label>Кто сейчас работает в системе</label>
+        <select id="currentUser" onchange="changeCurrentUser()">
+          <option value="Директор по маркетингу">Директор по маркетингу</option>
+          <option value="Маркетолог">Маркетолог</option>
+          <option value="Дизайнер">Дизайнер</option>
+          <option value="Product Manager">Product Manager</option>
+          <option value="SMM-специалист">SMM-специалист</option>
+        </select>
+
+        <div class="meta" id="roleHint"></div>
+      </div>
+
+      <div id="taskFormBlock">
+        <h2>Поставить задачу</h2>
+
+        <label>Название задачи</label>
+        <input id="taskTitle" type="text" maxlength="120" placeholder="Например: Подготовить баннер для Ozon" />
+
+        <label>Описание задачи</label>
+        <textarea id="taskDescription" maxlength="2000" placeholder="Опишите, что нужно сделать"></textarea>
+
+        <label>Ответственный</label>
+        <select id="taskResponsible">
+          <option value="Маркетолог">Маркетолог</option>
+          <option value="Дизайнер">Дизайнер</option>
+          <option value="Product Manager">Product Manager</option>
+          <option value="SMM-специалист">SMM-специалист</option>
+        </select>
+
+        <label>Приоритет</label>
+        <select id="taskPriority">
+          <option value="Высокий">Высокий</option>
+          <option value="Средний" selected>Средний</option>
+          <option value="Низкий">Низкий</option>
+        </select>
+
+        <label>Срок выполнения</label>
+        <input id="taskDeadline" type="date" />
+
+        <button class="btn-primary" onclick="addTask()">Добавить задачу</button>
+      </div>
+
+      <hr style="margin: 24px 0; border: none; border-top: 1px solid #e5e7eb;">
+
+      <h2>Команда</h2>
+      <div id="teamList" class="team-list"></div>
+
+      <h2>Резервная копия</h2>
+      <button class="btn-small btn-export" onclick="exportTasksToCsv()">Скачать CSV</button>
+      <button class="btn-small btn-export" onclick="exportBackupJson()">Скачать JSON</button>
+
+      <label>Импорт JSON</label>
+      <input id="importFile" type="file" accept="application/json" onchange="importBackupJson(event)" />
+
+      <button class="btn-small btn-delete" onclick="clearAllTasks()">Очистить все задачи</button>
+    </section>
+
+    <section class="card">
+      <div id="directorNotice" class="director-notice"></div>
+
+      <h2>Список задач</h2>
+
+      <div class="filters">
+        <div class="search-row">
+          <input id="taskSearch" type="search" placeholder="Поиск по задаче, описанию, комментарию…" oninput="renderAll()" />
+        </div>
+
+        <select id="filterResponsible" onchange="renderAll()">
+          <option value="Все">Все ответственные</option>
+          <option value="Маркетолог">Маркетолог</option>
+          <option value="Дизайнер">Дизайнер</option>
+          <option value="Product Manager">Product Manager</option>
+          <option value="SMM-специалист">SMM-специалист</option>
+        </select>
+
+        <select id="filterStatus" onchange="renderAll()">
+          <option value="Все">Все статусы</option>
+          <option value="Новая">Новая</option>
+          <option value="В работе">В работе</option>
+          <option value="Выполнено">Выполнено</option>
+        </select>
+
+        <select id="filterPriority" onchange="renderAll()">
+          <option value="Все">Все приоритеты</option>
+          <option value="Высокий">Высокий</option>
+          <option value="Средний">Средний</option>
+          <option value="Низкий">Низкий</option>
+        </select>
+      </div>
+
+      <div id="taskList"></div>
+
+      <hr style="margin: 24px 0; border: none; border-top: 1px solid #e5e7eb;">
+
+      <h2>Журнал действий</h2>
+      <div id="activityLog" class="log"></div>
+    </section>
+  </main>
+
+  <script>
+    const employees = [
+      "Маркетолог",
+      "Дизайнер",
+      "Product Manager",
+      "SMM-специалист"
+    ];
+
+    const STORAGE_KEY = "marketingTasksPro";
+    const USER_KEY = "marketingTasksCurrentUser";
+
+    let tasks = loadTasks();
+    let currentUser = localStorage.getItem(USER_KEY) || "Директор по маркетингу";
+    let originalTitle = document.title;
+    let titleBlinkInterval = null;
+
+    function loadTasks() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved ? JSON.parse(saved) : [];
+      } catch {
+        alert("Ошибка чтения сохранённых задач. Хранилище будет очищено.");
+        localStorage.removeItem(STORAGE_KEY);
+        return [];
+      }
+    }
+
+    function saveTasks() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+    }
+
+    function getById(id) {
+      return document.getElementById(id);
+    }
+
+    function isDirector() {
+      return currentUser === "Директор по маркетингу";
+    }
+
+    function changeCurrentUser() {
+      currentUser = getById("currentUser").value;
+      localStorage.setItem(USER_KEY, currentUser);
+      renderAll();
+    }
+
+    function initCurrentUser() {
+      getById("currentUser").value = currentUser;
+    }
+
+    function createElement(tag, className, text) {
+      const el = document.createElement(tag);
+      if (className) el.className = className;
+      if (text !== undefined && text !== null) el.textContent = text;
+      return el;
+    }
+
+    function addTask() {
+      if (!isDirector()) {
+        alert("Только директор может ставить новые задачи.");
+        return;
+      }
+
+      const title = getById("taskTitle").value.trim();
+      const description = getById("taskDescription").value.trim();
+      const responsible = getById("taskResponsible").value;
+      const priority = getById("taskPriority").value;
+      const deadline = getById("taskDeadline").value;
+
+      if (!title || !description || !deadline) {
+        alert("Заполните название, описание и срок выполнения.");
+        return;
+      }
+
+      const task = {
+        id: Date.now(),
+        title,
+        description,
+        responsible,
+        priority,
+        deadline,
+        status: "Новая",
+        comment: "",
+        createdAt: new Date().toISOString(),
+        completedAt: "",
+        createdBy: currentUser,
+        history: []
+      };
+
+      addHistory(task, "Задача создана");
+      tasks.push(task);
+      saveTasks();
+
+      getById("taskTitle").value = "";
+      getById("taskDescription").value = "";
+      getById("taskDeadline").value = "";
+      getById("taskPriority").value = "Средний";
+
+      renderAll();
+    }
+
+    function addHistory(task, action) {
+      task.history.push({
+        date: new Date().toISOString(),
+        user: currentUser,
+        action
+      });
+    }
+
+    function parseLocalDateYmd(ymd) {
+      if (!ymd || typeof ymd !== "string") return null;
+      const parts = ymd.split("-").map(Number);
+      if (parts.length !== 3 || parts.some(Number.isNaN)) return null;
+      return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+
+    function getDeadlineCategory(deadline) {
+      const d = parseLocalDateYmd(deadline);
+      if (!d) return "none";
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      d.setHours(0, 0, 0, 0);
+
+      const diff = Math.round((d - today) / 86400000);
+
+      if (diff < 0) return "overdue";
+      if (diff === 0) return "today";
+      return "upcoming";
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return "—";
+
+      if (dateString.includes("T")) {
+        return new Date(dateString).toLocaleString("ru-RU");
+      }
+
+      const date = parseLocalDateYmd(dateString);
+      return date ? date.toLocaleDateString("ru-RU") : dateString;
+    }
+
+    function sortTasks(list) {
+      const statusOrder = {
+        "Новая": 0,
+        "В работе": 1,
+        "Выполнено": 2
+      };
+
+      const deadlineOrder = {
+        overdue: 0,
+        today: 1,
+        upcoming: 2,
+        none: 3
+      };
+
+      const priorityOrder = {
+        "Высокий": 0,
+        "Средний": 1,
+        "Низкий": 2
+      };
+
+      return [...list].sort((a, b) => {
+        if (statusOrder[a.status] !== statusOrder[b.status]) {
+          return statusOrder[a.status] - statusOrder[b.status];
+        }
+
+        const da = getDeadlineCategory(a.deadline);
+        const db = getDeadlineCategory(b.deadline);
+
+        if (deadlineOrder[da] !== deadlineOrder[db]) {
+          return deadlineOrder[da] - deadlineOrder[db];
+        }
+
+        if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
+          return priorityOrder[a.priority] - priorityOrder[b.priority];
+        }
+
+        return b.id - a.id;
+      });
+    }
+
+    function getVisibleTasks() {
+      let result = [...tasks];
+
+      if (!isDirector()) {
+        result = result.filter(task => task.responsible === currentUser);
+      }
+
+      const responsible = getById("filterResponsible").value;
+      const status = getById("filterStatus").value;
+      const priority = getById("filterPriority").value;
+      const query = getById("taskSearch").value.trim().toLowerCase();
+
+      if (responsible !== "Все") {
+        result = result.filter(task => task.responsible === responsible);
+      }
+
+      if (status !== "Все") {
+        result = result.filter(task => task.status === status);
+      }
+
+      if (priority !== "Все") {
+        result = result.filter(task => task.priority === priority);
+      }
+
+      if (query) {
+        result = result.filter(task => {
+          return [
+            task.title,
+            task.description,
+            task.comment,
+            task.responsible,
+            task.priority,
+            task.status
+          ].some(value => String(value || "").toLowerCase().includes(query));
+        });
+      }
+
+      return sortTasks(result);
+    }
+
+    function renderAll() {
+      renderRole();
+      renderTeam();
+      renderTasks();
+      renderActivityLog();
+    }
+
+    function renderRole() {
+      const formBlock = getById("taskFormBlock");
+      const hint = getById("roleHint");
+
+      if (isDirector()) {
+        formBlock.classList.remove("hidden");
+        hint.textContent = "Вы можете ставить задачи, удалять их, видеть всю команду и получать уведомления.";
+      } else {
+        formBlock.classList.add("hidden");
+        hint.textContent = "Вы видите только свои задачи и можете менять их статус.";
+      }
+
+      getById("filterResponsible").disabled = !isDirector();
+    }
+
+    function renderTeam() {
+      const teamList = getById("teamList");
+      teamList.textContent = "";
+
+      employees.forEach(employee => {
+        const activeCount = tasks.filter(task =>
+          task.responsible === employee && task.status !== "Выполнено"
+        ).length;
+
+        const doneCount = tasks.filter(task =>
+          task.responsible === employee && task.status === "Выполнено"
+        ).length;
+
+        const row = createElement("div", "employee");
+
+        const left = createElement("div");
+        const name = createElement("strong", "", employee);
+        const stats = createElement("small", "", `Активных: ${activeCount}, выполнено: ${doneCount}`);
+
+        left.appendChild(name);
+        left.appendChild(stats);
+
+        const bell = createElement("span", `bell ${activeCount > 0 ? "active" : ""}`, "🔔");
+
+        row.appendChild(left);
+        row.appendChild(bell);
+        teamList.appendChild(row);
+      });
+    }
+
+    function renderTasks() {
+      const taskList = getById("taskList");
+      taskList.textContent = "";
+
+      const visibleTasks = getVisibleTasks();
+
+      if (visibleTasks.length === 0) {
+        taskList.appendChild(createElement("div", "empty", "Задач по выбранным условиям нет"));
+        return;
+      }
+
+      visibleTasks.forEach(task => {
+        taskList.appendChild(createTaskCard(task));
+      });
+    }
+
+    function createTaskCard(task) {
+      const deadlineCategory = getDeadlineCategory(task.deadline);
+      const active = task.status !== "Выполнено";
+
+      let taskClass = "task";
+      if (active && deadlineCategory === "overdue") taskClass += " task-overdue";
+      if (active && deadlineCategory === "today") taskClass += " task-today";
+
+      const card = createElement("div", taskClass);
+
+      const top = createElement("div", "task-top");
+
+      const textBlock = createElement("div");
+      textBlock.appendChild(createElement("p", "task-title", task.title));
+      textBlock.appendChild(createElement("p", "task-desc", task.description));
+
+      const badges = createElement("div");
+      badges.appendChild(createElement("span", `status ${getStatusClass(task.status)}`, task.status));
+      badges.appendChild(createElement("span", `priority ${getPriorityClass(task.priority)}`, task.priority));
+
+      top.appendChild(textBlock);
+      top.appendChild(badges);
+
+      card.appendChild(top);
+
+      card.appendChild(createElement("div", "meta", `Ответственный: ${task.responsible}`));
+
+      const deadlineText = getDeadlineText(task);
+      const deadline = createElement("div", "meta");
+      const deadlineSpan = createElement("span", deadlineText.className, deadlineText.text);
+      deadline.append("Срок: ");
+      deadline.appendChild(deadlineSpan);
+      card.appendChild(deadline);
+
+      card.appendChild(createElement("div", "meta", `Создано: ${formatDate(task.createdAt)}`));
+
+      if (task.completedAt) {
+        card.appendChild(createElement("div", "meta", `Выполнено: ${formatDate(task.completedAt)}`));
+      }
+
+      const commentLabel = createElement("label", "", "Комментарий ответственного");
+      card.appendChild(commentLabel);
+
+      const textarea = createElement("textarea");
+      textarea.id = `comment-${task.id}`;
+      textarea.placeholder = "Например: задача выполнена, макет отправлен на согласование";
+      textarea.value = task.comment || "";
+      textarea.disabled = !canEditTask(task);
+      card.appendChild(textarea);
+
+      const actions = createElement("div");
+
+      const saveBtn = createButton("Сохранить комментарий", "btn-small", () => saveComment(task.id));
+      saveBtn.disabled = !canEditTask(task);
+      actions.appendChild(saveBtn);
+
+      const progressBtn = createButton("В работе", "btn-small", () => setStatus(task.id, "В работе"));
+      progressBtn.disabled = !canEditTask(task) || task.status === "Выполнено";
+      actions.appendChild(progressBtn);
+
+      const doneBtn = createButton("Выполнено", "btn-small btn-done", () => setStatus(task.id, "Выполнено"));
+      doneBtn.disabled = !canEditTask(task) || task.status === "Выполнено";
+      actions.appendChild(doneBtn);
+
+      const reopenBtn = createButton("Вернуть в работу", "btn-small btn-warning", () => setStatus(task.id, "В работе"));
+      reopenBtn.disabled = !isDirector() || task.status !== "Выполнено";
+      actions.appendChild(reopenBtn);
+
+      const deleteBtn = createButton("Удалить", "btn-small btn-delete", () => deleteTask(task.id));
+      deleteBtn.disabled = !isDirector();
+      actions.appendChild(deleteBtn);
+
+      card.appendChild(actions);
+
+      if (task.comment) {
+        const commentBox = createElement("div", "comment-box");
+        const bold = createElement("b", "", "Комментарий:");
+        commentBox.appendChild(bold);
+        commentBox.appendChild(document.createElement("br"));
+        commentBox.append(task.comment);
+        card.appendChild(commentBox);
+      }
+
+      return card;
+    }
+
+    function createButton(text, className, onClick) {
+      const btn = createElement("button", className, text);
+      btn.type = "button";
+      btn.addEventListener("click", onClick);
+      return btn;
+    }
+
+    function canEditTask(task) {
+      return isDirector() || task.responsible === currentUser;
+    }
+
+    function getStatusClass(status) {
+      if (status === "В работе") return "status-progress";
+      if (status === "Выполнено") return "status-done";
+      return "status-new";
+    }
+
+    function getPriorityClass(priority) {
+      if (priority === "Высокий") return "priority-high";
+      if (priority === "Низкий") return "priority-low";
+      return "priority-medium";
+    }
+
+    function getDeadlineText(task) {
+      const category = getDeadlineCategory(task.deadline);
+      let text = formatDate(task.deadline);
+      let className = "";
+
+      if (task.status !== "Выполнено" && category === "overdue") {
+        text += " — просрочено";
+        className = "deadline-overdue";
+      }
+
+      if (task.status !== "Выполнено" && category === "today") {
+        text += " — сегодня";
+        className = "deadline-today";
+      }
+
+      return { text, className };
+    }
+
+    function saveComment(taskId) {
+      const task = tasks.find(t => t.id === taskId);
+      if (!task || !canEditTask(task)) return;
+
+      const comment = getById(`comment-${taskId}`).value.trim();
+      task.comment = comment;
+      addHistory(task, "Комментарий обновлён");
+
+      saveTasks();
+      renderAll();
+    }
+
+    function setStatus(taskId, newStatus) {
+      const task = tasks.find(t => t.id === taskId);
+      if (!task || !canEditTask(task)) return;
+
+      const oldStatus = task.status;
+      task.status = newStatus;
+
+      if (newStatus === "Выполнено" && oldStatus !== "Выполнено") {
+        task.completedAt = new Date().toISOString();
+        addHistory(task, "Задача выполнена");
+
+        if (isDirector() || currentUser === task.responsible) {
+          notifyDirector(task);
+        }
+      } else {
+        if (newStatus !== "Выполнено") {
+          task.completedAt = "";
+        }
+
+        addHistory(task, `Статус изменён: ${oldStatus} → ${newStatus}`);
+      }
+
+      saveTasks();
+      renderAll();
+    }
+
+    function notifyDirector(task) {
+      const notice = getById("directorNotice");
+      notice.textContent = `🟢 Уведомление директору: задача «${task.title}» выполнена. Ответственный: ${task.responsible}.`;
+      notice.classList.add("active");
+      document.body.classList.add("director-alert");
+
+      startTitleBlink();
+
+      if ("Notification" in window) {
+        if (Notification.permission === "granted") {
+          new Notification("Задача выполнена", {
+            body: `${task.responsible}: ${task.title}`
+          });
+        } else if (Notification.permission !== "denied") {
+          Notification.requestPermission();
+        }
+      }
+
+      setTimeout(stopDirectorNotification, 12000);
+    }
+
+    function startTitleBlink() {
+      let toggle = true;
+
+      if (titleBlinkInterval) {
+        clearInterval(titleBlinkInterval);
+      }
+
+      titleBlinkInterval = setInterval(() => {
+        document.title = toggle ? "🟢 ЗАДАЧА ВЫПОЛНЕНА!" : "✅ Проверьте задачу";
+        toggle = !toggle;
+      }, 700);
+    }
+
+    function stopDirectorNotification() {
+      getById("directorNotice").classList.remove("active");
+      document.body.classList.remove("director-alert");
+
+      if (titleBlinkInterval) {
+        clearInterval(titleBlinkInterval);
+        titleBlinkInterval = null;
+      }
+
+      document.title = originalTitle;
+    }
+
+    function deleteTask(taskId) {
+      if (!isDirector()) {
+        alert("Удалять задачи может только директор.");
+        return;
+      }
+
+      if (!confirm("Удалить эту задачу?")) return;
+
+      tasks = tasks.filter(task => task.id !== taskId);
+      saveTasks();
+      renderAll();
+    }
+
+    function clearAllTasks() {
+      if (!isDirector()) {
+        alert("Очищать список задач может только директор.");
+        return;
+      }
+
+      if (!confirm("Вы точно хотите удалить все задачи?")) return;
+
+      tasks = [];
+      saveTasks();
+      stopDirectorNotification();
+      renderAll();
+    }
+
+    function renderActivityLog() {
+      const log = getById("activityLog");
+      log.textContent = "";
+
+      const events = [];
+
+      tasks.forEach(task => {
+        task.history.forEach(item => {
+          events.push({
+            taskTitle: task.title,
+            ...item
+          });
+        });
+      });
+
+      events.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      if (events.length === 0) {
+        log.appendChild(createElement("div", "empty", "Пока нет действий"));
+        return;
+      }
+
+      events.slice(0, 80).forEach(event => {
+        const item = createElement("div", "log-item");
+        item.appendChild(createElement("strong", "", event.action));
+        item.appendChild(document.createElement("br"));
+        item.append(`${formatDate(event.date)} — ${event.user} — ${event.taskTitle}`);
+        log.appendChild(item);
+      });
+    }
+
+    function csvEscapeCell(value) {
+      const text = value == null ? "" : String(value);
+      if (/[",;\r\n]/.test(text)) {
+        return `"${text.replace(/"/g, '""')}"`;
+      }
+      return text;
+    }
+
+    function exportTasksToCsv() {
+      const headers = [
+        "Название",
+        "Описание",
+        "Ответственный",
+        "Приоритет",
+        "Срок",
+        "Статус",
+        "Комментарий",
+        "Создано",
+        "Выполнено"
+      ];
+
+      const rows = tasks.map(task => [
+        task.title,
+        task.description,
+        task.responsible,
+        task.priority,
+        task.deadline,
+        task.status,
+        task.comment || "",
+        formatDate(task.createdAt),
+        task.completedAt ? formatDate(task.completedAt) : ""
+      ]);
+
+      const csv = [
+        headers.map(csvEscapeCell).join(";"),
+        ...rows.map(row => row.map(csvEscapeCell).join(";"))
+      ].join("\r\n");
+
+      downloadFile(`marketing-tasks-${getTodayStamp()}.csv`, "\uFEFF" + csv, "text/csv;charset=utf-8");
+    }
+
+    function exportBackupJson() {
+      const data = {
+        exportedAt: new Date().toISOString(),
+        app: "Marketing Task Planner",
+        tasks
+      };
+
+      downloadFile(
+        `marketing-tasks-backup-${getTodayStamp()}.json`,
+        JSON.stringify(data, null, 2),
+        "application/json;charset=utf-8"
+      );
+    }
+
+    function importBackupJson(event) {
+      if (!isDirector()) {
+        alert("Импортировать резервную копию может только директор.");
+        event.target.value = "";
+        return;
+      }
+
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          const importedTasks = Array.isArray(data) ? data : data.tasks;
+
+          if (!Array.isArray(importedTasks)) {
+            throw new Error("Некорректный формат файла");
+          }
+
+          if (!confirm("Импорт заменит текущие задачи. Продолжить?")) {
+            event.target.value = "";
+            return;
+          }
+
+          tasks = importedTasks;
+          saveTasks();
+          renderAll();
+          alert("Импорт выполнен успешно.");
+        } catch {
+          alert("Не удалось импортировать файл. Проверьте, что это корректный JSON.");
+        }
+
+        event.target.value = "";
+      };
+
+      reader.readAsText(file);
+    }
+
+    function downloadFile(filename, content, type) {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(url);
+    }
+
+    function getTodayStamp() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    function scrollToPlanner(toTaskList = false) {
+      const target = toTaskList ? getById("taskList") : getById("plannerStart");
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    initCurrentUser();
+    renderAll();
+  </script>
+</body>
+</html>
