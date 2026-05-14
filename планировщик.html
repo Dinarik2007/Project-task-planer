@@ -1,9 +1,13 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Планировщик задач отдела маркетинга</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,600;0,700;1,600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet" />
 
   <style>
     * {
@@ -11,125 +15,322 @@
     }
 
     :root {
-      --green: #23402b;
-      --green-light: #30593b;
-      --bg: #f3f5f7;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-      --red: #dc2626;
-      --orange: #d97706;
-      --blue: #2563eb;
+      --font-display: "Libre Bodoni", Georgia, "Times New Roman", serif;
+      --font-body: "Literata", Georgia, serif;
+      --green: #1e3d2f;
+      --green-light: #2d5c47;
+      --bg: #f4efe6;
+      --bg-elevated: #fffdf8;
+      --text: #1a1814;
+      --muted: #5c5548;
+      --border: rgba(26, 24, 20, 0.1);
+      --accent: #c4552d;
+      --accent-soft: rgba(196, 85, 45, 0.14);
+      --gold: #d4a574;
+      --red: #b42318;
+      --orange: #b45309;
+      --blue: #1d4ed8;
+      --shadow-sm: 0 1px 2px rgba(20, 41, 32, 0.06);
+      --shadow-md: 0 4px 20px rgba(20, 41, 32, 0.08), 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+      --radius-card: 18px;
+      --radius-control: 11px;
+      /* MagicBento: свечение в тон сайту (золото) */
+      --magic-glow-rgb: 212, 165, 116;
     }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: var(--bg);
+      font-family: var(--font-body);
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(ellipse 120% 60% at 12% -10%, rgba(212, 165, 116, 0.22) 0%, transparent 52%),
+        radial-gradient(ellipse 80% 50% at 100% 0%, rgba(30, 61, 47, 0.08) 0%, transparent 45%);
       color: var(--text);
-      line-height: 1.45;
+      line-height: 1.5;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
     .landing {
-      background: linear-gradient(135deg, #1f3a28 0%, #2f6a46 100%);
-      color: white;
-      padding: 64px 16px 48px;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      color: #f8f5ef;
+      padding: clamp(3rem, 8vw, 5.5rem) 16px clamp(2.5rem, 5vw, 4rem);
+      background:
+        radial-gradient(100% 90% at 92% 8%, rgba(212, 165, 116, 0.22) 0%, transparent 42%),
+        radial-gradient(70% 50% at 0% 100%, rgba(30, 61, 47, 0.55) 0%, transparent 55%),
+        linear-gradient(158deg, #0f2418 0%, #1a3d2c 38%, #234d38 100%);
+    }
+
+    .landing::after {
+      content: "";
+      position: absolute;
+      top: -40%;
+      right: -25%;
+      width: min(70vw, 520px);
+      height: min(70vw, 520px);
+      border: 1px solid rgba(248, 245, 239, 0.08);
+      border-radius: 50%;
+      pointer-events: none;
     }
 
     .landing-inner {
-      max-width: 1300px;
+      position: relative;
+      z-index: 1;
+      max-width: 1180px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: 24px;
-      align-items: stretch;
+      grid-template-columns: minmax(0, 1.12fr) minmax(240px, 340px);
+      gap: clamp(1.25rem, 4vw, 2.75rem);
+      align-items: start;
+    }
+
+    .landing-copy {
+      max-width: 38rem;
+    }
+
+    .landing-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .landing-portrait {
+      position: relative;
+      margin: 0;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      border: 2px solid rgba(212, 165, 116, 0.45);
+      box-shadow:
+        0 0 0 1px rgba(15, 36, 24, 0.55),
+        0 28px 56px rgba(0, 0, 0, 0.38);
+      background: rgba(8, 22, 16, 0.55);
+      animation: landingReveal 0.85s ease 0.08s backwards;
+    }
+
+    .landing-portrait::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(
+        165deg,
+        rgba(212, 165, 116, 0.18) 0%,
+        transparent 35%,
+        transparent 52%,
+        rgba(15, 36, 24, 0.72) 100%
+      );
+    }
+
+    .landing-portrait img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      object-position: 50% 16%;
+      transform: scale(1.03);
+      transition: transform 0.65s ease;
+    }
+
+    .landing-portrait:hover img {
+      transform: scale(1.07);
+    }
+
+    .landing-portrait-caption {
+      position: absolute;
+      z-index: 4;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 1.15rem 1rem 1rem;
+      background: linear-gradient(180deg, transparent, rgba(8, 22, 16, 0.94));
+      color: #f8f5ef;
+    }
+
+    .landing-portrait-name {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 0.25rem;
+    }
+
+    .landing-portrait-role {
+      display: block;
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(248, 245, 239, 0.68);
+    }
+
+    .landing-eyebrow {
+      margin: 0 0 0.85rem;
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(248, 245, 239, 0.55);
     }
 
     .landing h1 {
-      margin: 0 0 12px;
-      font-size: 40px;
-      line-height: 1.15;
+      margin: 0 0 1rem;
+      font-family: var(--font-display);
+      font-size: clamp(2.1rem, 4.5vw, 3.15rem);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
     }
 
-    .landing p {
-      margin: 0 0 20px;
-      font-size: 17px;
-      opacity: 0.95;
+    .landing h1 span {
+      color: var(--gold);
+      font-style: italic;
+      font-weight: 600;
+    }
+
+    .landing-lead {
+      margin: 0 0 1.5rem;
+      font-size: clamp(1rem, 1.35vw, 1.125rem);
+      line-height: 1.65;
+      color: rgba(248, 245, 239, 0.88);
     }
 
     .landing-features {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 20px;
+      gap: 0.75rem;
+      margin-top: 1.75rem;
     }
 
     .landing-feature {
-      border: 1px solid rgba(255,255,255,0.24);
-      border-radius: 12px;
-      padding: 12px;
-      background: rgba(255,255,255,0.08);
-      font-size: 14px;
+      position: relative;
+      border: 1px solid rgba(248, 245, 239, 0.14);
+      border-radius: 14px;
+      padding: 0.9rem 1rem;
+      background: rgba(248, 245, 239, 0.06);
+      font-size: 0.875rem;
+      line-height: 1.45;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+      animation: landingReveal 0.75s ease backwards;
+      --glow-x: 50%;
+      --glow-y: 50%;
+      --glow-intensity: 0;
+      --glow-radius: 400px;
+      isolation: isolate;
     }
 
-    .landing-aside {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.22);
-      border-radius: 16px;
-      padding: 22px;
-      backdrop-filter: blur(2px);
+    .landing-feature:nth-child(1) { animation-delay: 0.12s; }
+    .landing-feature:nth-child(2) { animation-delay: 0.2s; }
+    .landing-feature:nth-child(3) { animation-delay: 0.28s; }
+    .landing-feature:nth-child(4) { animation-delay: 0.36s; }
+
+    .landing-feature:hover {
+      transform: translateY(-2px);
+      border-color: rgba(212, 165, 116, 0.35);
+      background: rgba(248, 245, 239, 0.1);
     }
 
-    .landing-aside h3 {
-      margin: 0 0 10px;
-      font-size: 20px;
-    }
-
-    .landing-aside ul {
-      margin: 0;
-      padding-left: 18px;
-    }
-
-    .landing-aside li {
-      margin: 0 0 8px;
-      font-size: 14px;
+    @keyframes landingReveal {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .landing-actions {
-      margin-top: 20px;
+      margin-top: 1.5rem;
       display: flex;
-      gap: 10px;
+      gap: 0.65rem;
       flex-wrap: wrap;
     }
 
     .btn-hero {
-      background: white;
-      color: #163622;
-      padding: 12px 16px;
+      background: var(--gold);
+      color: #142920;
+      padding: 0.85rem 1.35rem;
+      font-family: var(--font-body);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      border-radius: 999px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .btn-hero:hover {
+      background: #e0b888;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
     }
 
     .btn-hero-outline {
       background: transparent;
-      color: white;
-      border: 1px solid rgba(255,255,255,0.35);
-      padding: 12px 16px;
+      color: #f8f5ef;
+      border: 1px solid rgba(248, 245, 239, 0.38);
+      padding: 0.85rem 1.35rem;
+      font-family: var(--font-body);
+      font-weight: 600;
+      border-radius: 999px;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-hero-outline:hover {
+      background: rgba(248, 245, 239, 0.08);
+      border-color: rgba(248, 245, 239, 0.55);
+      transform: translateY(-1px);
     }
 
     .app-header {
-      background: white;
+      position: relative;
+      z-index: 1;
+      background: var(--bg-elevated);
       border-bottom: 1px solid var(--border);
-      padding: 20px 16px;
+      padding: clamp(1.75rem, 4vw, 2.5rem) 16px;
       text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .app-header::before {
+      content: "";
+      display: block;
+      width: 48px;
+      height: 3px;
+      margin: 0 auto 1rem;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      border-radius: 2px;
     }
 
     .app-header h2 {
-      margin: 0 0 4px;
-      font-size: 28px;
+      margin: 0 0 0.35rem;
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--green);
     }
 
     .app-header p {
       margin: 0;
       color: var(--muted);
+      font-size: 0.95rem;
     }
 
     body.director-alert {
@@ -137,144 +338,203 @@
     }
 
     @keyframes greenFlash {
-      0% { background: #f3f5f7; }
-      50% { background: #b7f7c1; }
-      100% { background: #f3f5f7; }
-    }
-
-    header {
-      background: var(--green);
-      color: white;
-      padding: 24px;
-      text-align: center;
-    }
-
-    header h1 {
-      margin: 0 0 8px;
-      font-size: 28px;
-    }
-
-    header p {
-      margin: 0;
-      opacity: 0.9;
+      0%, 100% { background-color: var(--bg); }
+      50% { background-color: #e5f4e8; }
     }
 
     .container {
-      max-width: 1300px;
-      margin: 24px auto;
-      padding: 0 16px;
+      position: relative;
+      z-index: 1;
+      max-width: 1220px;
+      margin: clamp(1.25rem, 3vw, 2rem) auto;
+      padding: 0 16px 2.5rem;
       display: grid;
-      grid-template-columns: 360px 1fr;
-      gap: 24px;
+      grid-template-columns: minmax(0, 340px) 1fr;
+      gap: clamp(1rem, 2.5vw, 1.75rem);
     }
 
     .card {
-      background: white;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      background: var(--bg-elevated);
+      border-radius: var(--radius-card);
+      padding: 1.35rem 1.35rem 1.5rem;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+      transition: box-shadow 0.25s ease, transform 0.25s ease;
+    }
+
+    .card.magic-bento-card {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .landing-portrait.magic-bento-card--border-glow::after {
+      z-index: 1;
+    }
+
+    .landing-portrait .particle {
+      z-index: 2;
+    }
+
+    .landing-portrait::before {
+      z-index: 3;
+    }
+
+    .landing-feature .particle {
+      z-index: 3;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 32px rgba(20, 41, 32, 0.1), 0 1px 0 rgba(255, 255, 255, 0.65) inset;
     }
 
     h2 {
       margin-top: 0;
-      font-size: 22px;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--green);
     }
 
     h3 {
       margin-bottom: 8px;
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--green);
     }
 
     label {
       display: block;
-      margin-top: 14px;
-      font-weight: bold;
-      font-size: 14px;
+      margin-top: 1rem;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.02em;
+      color: var(--text);
     }
 
-    input, textarea, select {
+    input,
+    textarea,
+    select {
       width: 100%;
-      margin-top: 6px;
-      padding: 10px;
-      border: 1px solid #d1d5db;
-      border-radius: 10px;
-      font-size: 14px;
-      background: white;
+      margin-top: 0.4rem;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid rgba(26, 24, 20, 0.12);
+      border-radius: var(--radius-control);
+      font-size: 0.9rem;
+      font-family: var(--font-body);
+      background: #fff;
+      color: var(--text);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: rgba(196, 85, 45, 0.55);
+      box-shadow: 0 0 0 3px var(--accent-soft);
     }
 
     textarea {
-      min-height: 90px;
+      min-height: 92px;
       resize: vertical;
     }
 
     button {
       border: none;
-      border-radius: 10px;
-      padding: 10px 14px;
+      border-radius: var(--radius-control);
+      padding: 0.55rem 0.9rem;
       cursor: pointer;
-      font-size: 14px;
-      font-weight: bold;
+      font-size: 0.875rem;
+      font-weight: 600;
+      font-family: var(--font-body);
+      transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+    }
+
+    button:not(:disabled):active {
+      transform: scale(0.98);
+    }
+
+    button:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--accent-soft);
     }
 
     button:disabled {
-      opacity: 0.5;
+      opacity: 0.48;
       cursor: not-allowed;
     }
 
     .btn-primary {
       width: 100%;
-      margin-top: 18px;
-      background: var(--green);
-      color: white;
+      margin-top: 1.15rem;
+      background: linear-gradient(165deg, var(--green) 0%, var(--green-light) 100%);
+      color: #f8f5ef;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      box-shadow: 0 4px 16px rgba(30, 61, 47, 0.28);
     }
 
-    .btn-primary:hover {
-      background: var(--green-light);
+    .btn-primary:hover:not(:disabled) {
+      filter: brightness(1.06);
+      box-shadow: 0 6px 22px rgba(30, 61, 47, 0.32);
     }
 
     .btn-small {
-      background: #e5e7eb;
-      color: #111827;
-      margin-top: 8px;
-      margin-right: 6px;
+      background: rgba(26, 24, 20, 0.06);
+      color: var(--text);
+      margin-top: 0.5rem;
+      margin-right: 0.4rem;
+    }
+
+    .btn-small:hover:not(:disabled) {
+      background: rgba(26, 24, 20, 0.1);
     }
 
     .btn-done {
-      background: #d1fae5;
-      color: #065f46;
+      background: rgba(30, 61, 47, 0.12);
+      color: var(--green);
     }
 
     .btn-delete {
-      background: #fee2e2;
-      color: #991b1b;
+      background: rgba(180, 35, 24, 0.1);
+      color: var(--red);
     }
 
     .btn-export {
       background: var(--green);
-      color: white;
+      color: #f8f5ef;
+    }
+
+    .btn-export:hover:not(:disabled) {
+      filter: brightness(1.08);
     }
 
     .btn-warning {
-      background: #fef3c7;
-      color: #92400e;
+      background: rgba(180, 83, 9, 0.12);
+      color: var(--orange);
     }
 
     .role-box {
-      background: #f9fafb;
-      padding: 14px;
-      border-radius: 12px;
+      background: linear-gradient(145deg, rgba(212, 165, 116, 0.12) 0%, rgba(30, 61, 47, 0.06) 100%);
+      padding: 1rem 1rem 1.1rem;
+      border-radius: 14px;
       border: 1px solid var(--border);
-      margin-bottom: 20px;
+      margin-bottom: 1.25rem;
     }
 
     .director-notice {
       display: none;
-      margin-bottom: 16px;
-      padding: 14px;
-      border-radius: 12px;
-      background: #d1fae5;
+      margin-bottom: 1rem;
+      padding: 1rem 1.1rem;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #ecfdf3 0%, #d1fae5 100%);
       color: #065f46;
-      font-weight: bold;
-      border: 2px solid #10b981;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.12);
       animation: noticeBlink 0.8s infinite;
     }
 
@@ -283,64 +543,82 @@
     }
 
     @keyframes noticeBlink {
-      0% { opacity: 1; }
-      50% { opacity: 0.45; }
-      100% { opacity: 1; }
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.72; }
     }
 
     .team-list {
       display: grid;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 0.6rem;
+      margin-bottom: 1.25rem;
     }
 
     .employee {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #f9fafb;
-      padding: 12px;
+      background: rgba(255, 253, 248, 0.9);
+      padding: 0.75rem 0.85rem;
       border-radius: 12px;
       border: 1px solid var(--border);
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .employee:hover {
+      border-color: rgba(196, 85, 45, 0.25);
+      transform: translateX(2px);
+    }
+
+    .employee strong {
+      font-family: var(--font-body);
+      font-weight: 600;
     }
 
     .employee small {
       color: var(--muted);
       display: block;
-      margin-top: 4px;
+      margin-top: 0.2rem;
+      font-size: 0.8rem;
     }
 
     .bell {
-      font-size: 22px;
-      opacity: 0.3;
+      font-size: 1.35rem;
+      opacity: 0.28;
+      filter: grayscale(0.2);
     }
 
     .bell.active {
       opacity: 1;
       animation: ring 0.8s infinite;
+      filter: none;
     }
 
     @keyframes ring {
       0% { transform: rotate(0deg); }
-      25% { transform: rotate(12deg); }
+      25% { transform: rotate(11deg); }
       50% { transform: rotate(0deg); }
-      75% { transform: rotate(-12deg); }
+      75% { transform: rotate(-11deg); }
       100% { transform: rotate(0deg); }
     }
 
     .filters {
       display: flex;
-      gap: 10px;
-      margin-bottom: 16px;
+      gap: 0.6rem;
+      margin-bottom: 1.1rem;
       flex-wrap: wrap;
       align-items: center;
+      padding: 0.75rem;
+      background: rgba(30, 61, 47, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 14px;
     }
 
     .filters select,
     .filters input {
       width: auto;
-      min-width: 170px;
+      min-width: 160px;
       margin-top: 0;
+      background: #fff;
     }
 
     .search-row {
@@ -352,21 +630,48 @@
     }
 
     .task {
+      position: relative;
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 14px;
-      background: white;
+      border-radius: 16px;
+      padding: 1.1rem 1.15rem 1.15rem;
+      margin-bottom: 0.85rem;
+      background: #fffefb;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .task::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 12px;
+      bottom: 12px;
+      width: 3px;
+      border-radius: 0 3px 3px 0;
+      background: rgba(30, 61, 47, 0.2);
+    }
+
+    .task:hover {
+      border-color: rgba(30, 61, 47, 0.18);
+      box-shadow: 0 6px 20px rgba(20, 41, 32, 0.07);
     }
 
     .task-overdue {
-      border-left: 5px solid var(--red);
-      background: #fef2f2;
+      background: linear-gradient(90deg, rgba(180, 35, 24, 0.06) 0%, #fffefb 28%);
+    }
+
+    .task-overdue::before {
+      width: 4px;
+      background: var(--red);
     }
 
     .task-today {
-      border-left: 5px solid var(--orange);
-      background: #fffbeb;
+      background: linear-gradient(90deg, rgba(180, 83, 9, 0.08) 0%, #fffefb 30%);
+    }
+
+    .task-today::before {
+      width: 4px;
+      background: var(--orange);
     }
 
     .task-top {
@@ -377,105 +682,125 @@
     }
 
     .task-title {
-      font-size: 18px;
-      font-weight: bold;
-      margin: 0 0 8px;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.4rem;
+      color: var(--text);
     }
 
     .task-desc {
-      margin: 8px 0;
-      line-height: 1.5;
-      color: #374151;
+      margin: 0.4rem 0;
+      line-height: 1.55;
+      color: var(--muted);
       white-space: pre-wrap;
+      font-size: 0.92rem;
     }
 
     .meta {
-      font-size: 13px;
+      font-size: 0.82rem;
       color: var(--muted);
-      margin-top: 6px;
+      margin-top: 0.35rem;
     }
 
     .status,
     .priority {
       display: inline-block;
-      padding: 6px 10px;
+      padding: 0.35rem 0.65rem;
       border-radius: 999px;
-      font-size: 12px;
-      font-weight: bold;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
       white-space: nowrap;
-      margin-left: 4px;
+      margin-left: 0.25rem;
     }
 
     .status-new {
-      background: #fef3c7;
+      background: rgba(180, 83, 9, 0.14);
       color: #92400e;
     }
 
     .status-progress {
-      background: #dbeafe;
+      background: rgba(29, 78, 216, 0.12);
       color: #1e40af;
     }
 
     .status-done {
-      background: #d1fae5;
+      background: rgba(30, 61, 47, 0.14);
       color: #065f46;
     }
 
     .priority-high {
-      background: #fee2e2;
+      background: rgba(180, 35, 24, 0.12);
       color: #991b1b;
     }
 
     .priority-medium {
-      background: #fef3c7;
+      background: rgba(180, 83, 9, 0.14);
       color: #92400e;
     }
 
     .priority-low {
-      background: #e0f2fe;
+      background: rgba(29, 78, 216, 0.1);
       color: #075985;
     }
 
     .comment-box {
-      margin-top: 12px;
-      padding: 12px;
-      background: #f9fafb;
+      margin-top: 0.75rem;
+      padding: 0.85rem 1rem;
+      background: rgba(30, 61, 47, 0.04);
       border-radius: 12px;
-      font-size: 14px;
+      font-size: 0.9rem;
       white-space: pre-wrap;
+      border: 1px solid var(--border);
+    }
+
+    .comment-box a {
+      color: var(--accent);
+      font-weight: 600;
+      word-break: break-all;
+    }
+
+    .comment-box a:hover {
+      text-decoration: underline;
     }
 
     .empty {
       text-align: center;
       color: var(--muted);
-      padding: 30px;
-      background: white;
-      border-radius: 14px;
+      padding: 2rem 1.25rem;
+      background: rgba(255, 253, 248, 0.85);
+      border-radius: 16px;
+      border: 1px dashed rgba(26, 24, 20, 0.15);
+      font-size: 0.95rem;
     }
 
     .deadline-overdue {
-      color: #b91c1c;
-      font-weight: bold;
+      color: var(--red);
+      font-weight: 600;
     }
 
     .deadline-today {
-      color: #b45309;
-      font-weight: bold;
+      color: var(--orange);
+      font-weight: 600;
     }
 
     .log {
-      max-height: 260px;
+      max-height: 280px;
       overflow: auto;
-      background: #f9fafb;
-      padding: 12px;
-      border-radius: 12px;
+      background: rgba(30, 61, 47, 0.03);
+      padding: 0.85rem 1rem;
+      border-radius: 14px;
       border: 1px solid var(--border);
-      font-size: 13px;
+      font-size: 0.82rem;
+      scrollbar-color: rgba(30, 61, 47, 0.25) transparent;
     }
 
     .log-item {
       border-bottom: 1px solid var(--border);
-      padding: 8px 0;
+      padding: 0.55rem 0;
     }
 
     .log-item:last-child {
@@ -486,13 +811,101 @@
       display: none;
     }
 
+    /* —— MagicBento (адаптация под статический сайт) —— */
+    .magic-bento-card {
+      --glow-x: 50%;
+      --glow-y: 50%;
+      --glow-intensity: 0;
+      --glow-radius: 400px;
+    }
+
+    .magic-bento-card--border-glow::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      padding: 5px;
+      border-radius: inherit;
+      background: radial-gradient(
+        var(--glow-radius) circle at var(--glow-x) var(--glow-y),
+        rgba(var(--magic-glow-rgb), calc(var(--glow-intensity) * 0.75)) 0%,
+        rgba(var(--magic-glow-rgb), calc(var(--glow-intensity) * 0.38)) 32%,
+        transparent 62%
+      );
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 1;
+    }
+
+    .magic-bento-card--surface-light.magic-bento-card--border-glow::after {
+      background: radial-gradient(
+        var(--glow-radius) circle at var(--glow-x) var(--glow-y),
+        rgba(30, 61, 47, calc(var(--glow-intensity) * 0.35)) 0%,
+        rgba(30, 61, 47, calc(var(--glow-intensity) * 0.16)) 35%,
+        transparent 65%
+      );
+    }
+
+    .particle-container {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .global-spotlight {
+      position: fixed;
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 150;
+      opacity: 0;
+      left: 0;
+      top: 0;
+      mix-blend-mode: screen;
+      will-change: transform, opacity;
+      background: radial-gradient(
+        circle,
+        rgba(var(--magic-glow-rgb), 0.16) 0%,
+        rgba(var(--magic-glow-rgb), 0.08) 14%,
+        rgba(var(--magic-glow-rgb), 0.04) 26%,
+        rgba(var(--magic-glow-rgb), 0.02) 42%,
+        transparent 72%
+      );
+    }
+
+    main.container[data-bento-spotlight] .magic-bento-card--border-glow:hover {
+      box-shadow: 0 8px 28px rgba(20, 41, 32, 0.1), 0 0 28px rgba(var(--magic-glow-rgb), 0.12);
+    }
+
     @media (max-width: 900px) {
       .landing-inner {
         grid-template-columns: 1fr;
       }
 
-      .landing h1 {
-        font-size: 32px;
+      .landing-portrait {
+        max-width: min(100%, 340px);
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .landing-copy {
+        max-width: none;
       }
 
       .landing-features {
@@ -509,35 +922,65 @@
         width: 100%;
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .landing-feature {
+        animation: none;
+      }
+
+      body.director-alert {
+        animation: none;
+      }
+
+      .director-notice {
+        animation: none;
+      }
+
+      .bell.active {
+        animation: none;
+      }
+
+      .landing-portrait:hover img {
+        transform: scale(1.03);
+      }
+    }
   </style>
 </head>
 
 <body>
-  <section class="landing">
+  <section class="landing" data-bento-spotlight>
     <div class="landing-inner">
-      <div>
-        <h1>Планировщик задач отдела маркетинга</h1>
-        <p>Готовый рабочий лендинг и приложение в одном экране: ставьте задачи, отслеживайте статусы, фиксируйте комментарии и держите всю команду в едином контуре.</p>
+      <div class="landing-copy">
+        <p class="landing-eyebrow">Маркетинг · контроль · исполнение</p>
+        <h1>Планировщик задач <span>отдела маркетинга</span></h1>
+        <p class="landing-lead">Готовый рабочий лендинг и приложение в одном экране: ставьте задачи, отслеживайте статусы, фиксируйте комментарии и держите всю команду в едином контуре.</p>
         <div class="landing-actions">
           <button class="btn-hero" onclick="scrollToPlanner()">Перейти к планировщику</button>
           <button class="btn-hero-outline" onclick="scrollToPlanner(true)">Сразу в список задач</button>
         </div>
         <div class="landing-features">
-          <div class="landing-feature">Роли сотрудников и директора с разными правами</div>
-          <div class="landing-feature">Статусы, приоритеты, дедлайны и история изменений</div>
-          <div class="landing-feature">Фильтрация и поиск по задачам и комментариям</div>
-          <div class="landing-feature">Экспорт и импорт в CSV/JSON для резервных копий</div>
+          <div class="landing-feature magic-bento-card particle-container magic-bento-card--border-glow">Роли сотрудников и директора с разными правами</div>
+          <div class="landing-feature magic-bento-card particle-container magic-bento-card--border-glow">Статусы, приоритеты, дедлайны и история изменений</div>
+          <div class="landing-feature magic-bento-card particle-container magic-bento-card--border-glow">Фильтрация и поиск по задачам и комментариям</div>
+          <div class="landing-feature magic-bento-card particle-container magic-bento-card--border-glow">Экспорт и импорт в CSV/JSON для резервных копий</div>
         </div>
       </div>
-      <aside class="landing-aside">
-        <h3>Что внутри</h3>
-        <ul>
-          <li>Постановка задач директором и контроль исполнения</li>
-          <li>Работа ответственных по своим задачам и комментариям</li>
-          <li>Уведомление о завершении и журнал действий</li>
-          <li>Сортировка по статусу, срокам и приоритету</li>
-        </ul>
-      </aside>
+      <div class="landing-right">
+        <figure class="landing-portrait magic-bento-card particle-container magic-bento-card--border-glow">
+          <img
+            src="assets/hero-portrait.jpg"
+            alt="Автор и команда планировщика задач отдела маркетинга"
+            width="720"
+            height="960"
+            loading="eager"
+            decoding="async"
+          />
+          <figcaption class="landing-portrait-caption">
+            <span class="landing-portrait-name">Добро пожаловать</span>
+            <span class="landing-portrait-role">Дина Голубь - Директор по маркетингу</span>
+          </figcaption>
+        </figure>
+      </div>
     </div>
   </section>
 
@@ -546,8 +989,8 @@
     <p>Ниже находится полноценный функционал управления задачами</p>
   </header>
 
-  <main class="container" id="plannerApp">
-    <section class="card">
+  <main class="container" id="plannerApp" data-bento-spotlight>
+    <section class="card magic-bento-card magic-bento-card--border-glow magic-bento-card--surface-light">
       <div class="role-box">
         <h2>Режим работы</h2>
 
@@ -608,8 +1051,7 @@
       <button class="btn-small btn-delete" onclick="clearAllTasks()">Очистить все задачи</button>
     </section>
 
-    <section class="card">
-      <div id="directorNotice" class="director-notice"></div>
+    <section class="card magic-bento-card magic-bento-card--border-glow magic-bento-card--surface-light">
 
       <h2>Список задач</h2>
 
@@ -650,6 +1092,354 @@
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script>
+(function () {
+  'use strict';
+  const MOBILE_BREAKPOINT = 768;
+  const DEFAULT_SPOTLIGHT_RADIUS = 400;
+  const DEFAULT_PARTICLE_COUNT = 12;
+
+  if (typeof gsap === 'undefined') return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  function readGlowRgb() {
+    const v = getComputedStyle(document.documentElement).getPropertyValue('--magic-glow-rgb').trim();
+    return v || '212, 165, 116';
+  }
+  const GLOW_RGB = readGlowRgb();
+
+  function isNarrow() {
+    return window.innerWidth <= MOBILE_BREAKPOINT;
+  }
+
+  function calculateSpotlightValues(radius) {
+    return { proximity: radius * 0.5, fadeDistance: radius * 0.75 };
+  }
+
+  function updateCardGlowProperties(card, mouseX, mouseY, glow, radius) {
+    const rect = card.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const relativeX = ((mouseX - rect.left) / rect.width) * 100;
+    const relativeY = ((mouseY - rect.top) / rect.height) * 100;
+    card.style.setProperty('--glow-x', `${relativeX}%`);
+    card.style.setProperty('--glow-y', `${relativeY}%`);
+    card.style.setProperty('--glow-intensity', String(glow));
+    card.style.setProperty('--glow-radius', `${radius}px`);
+  }
+
+  function createParticleElement(x, y, color) {
+    const el = document.createElement('div');
+    el.className = 'particle';
+    el.style.left = `${x}px`;
+    el.style.top = `${y}px`;
+    el.style.background = `rgba(${color}, 1)`;
+    el.style.boxShadow = `0 0 6px rgba(${color}, 0.55)`;
+    return el;
+  }
+
+  function initParticleCard(element, opts) {
+    const particleCount = opts.particleCount ?? DEFAULT_PARTICLE_COUNT;
+    const glowColor = opts.glowColor ?? GLOW_RGB;
+    const enableTilt = opts.enableTilt === true;
+    const clickEffect = opts.clickEffect !== false;
+    const enableMagnetism = opts.enableMagnetism === true;
+
+    let isHovered = false;
+    let particlesInitialized = false;
+    let memoizedParticles = [];
+    const particlesRef = [];
+    const timeoutsRef = [];
+    let magnetismAnimation = null;
+
+    function clearAllParticles() {
+      timeoutsRef.forEach(clearTimeout);
+      timeoutsRef.length = 0;
+      if (magnetismAnimation) magnetismAnimation.kill();
+      magnetismAnimation = null;
+      particlesRef.forEach((particle) => {
+        gsap.to(particle, {
+          scale: 0,
+          opacity: 0,
+          duration: 0.3,
+          ease: 'back.in(1.7)',
+          onComplete: () => particle.remove()
+        });
+      });
+      particlesRef.length = 0;
+    }
+
+    function initializeParticles() {
+      if (particlesInitialized || !element) return;
+      const rect = element.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      memoizedParticles = Array.from({ length: particleCount }, () =>
+        createParticleElement(Math.random() * w, Math.random() * h, glowColor)
+      );
+      particlesInitialized = true;
+    }
+
+    function animateParticles() {
+      if (!element || !isHovered || isNarrow()) return;
+      if (!particlesInitialized) initializeParticles();
+      memoizedParticles.forEach((particle, index) => {
+        const timeoutId = setTimeout(() => {
+          if (!isHovered || !element) return;
+          const clone = particle.cloneNode(true);
+          element.appendChild(clone);
+          particlesRef.push(clone);
+
+          gsap.fromTo(clone, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(1.7)' });
+          gsap.to(clone, {
+            x: (Math.random() - 0.5) * 100,
+            y: (Math.random() - 0.5) * 100,
+            rotation: Math.random() * 360,
+            duration: 2 + Math.random() * 2,
+            ease: 'none',
+            repeat: -1,
+            yoyo: true
+          });
+          gsap.to(clone, {
+            opacity: 0.3,
+            duration: 1.5,
+            ease: 'power2.inOut',
+            repeat: -1,
+            yoyo: true
+          });
+        }, index * 100);
+        timeoutsRef.push(timeoutId);
+      });
+    }
+
+    function addRipple(e) {
+      const rect = element.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const maxDistance = Math.max(
+        Math.hypot(x, y),
+        Math.hypot(x - rect.width, y),
+        Math.hypot(x, y - rect.height),
+        Math.hypot(x - rect.width, y - rect.height)
+      );
+      const ripple = document.createElement('div');
+      ripple.style.cssText = [
+        'position:absolute',
+        `width:${maxDistance * 2}px`,
+        `height:${maxDistance * 2}px`,
+        'border-radius:50%',
+        `background:radial-gradient(circle,rgba(${glowColor},0.38) 0%,rgba(${glowColor},0.18) 32%,transparent 72%)`,
+        `left:${x - maxDistance}px`,
+        `top:${y - maxDistance}px`,
+        'pointer-events:none',
+        'z-index:50'
+      ].join(';');
+      element.appendChild(ripple);
+      gsap.fromTo(
+        ripple,
+        { scale: 0, opacity: 1 },
+        {
+          scale: 1,
+          opacity: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          onComplete: () => ripple.remove()
+        }
+      );
+    }
+
+    function handleMouseEnter() {
+      if (isNarrow()) return;
+      isHovered = true;
+      animateParticles();
+      if (enableTilt) {
+        gsap.to(element, { rotateX: 5, rotateY: 5, duration: 0.3, ease: 'power2.out', transformPerspective: 1000 });
+      }
+    }
+
+    function handleMouseLeave() {
+      isHovered = false;
+      clearAllParticles();
+      if (enableTilt) {
+        gsap.to(element, { rotateX: 0, rotateY: 0, duration: 0.3, ease: 'power2.out' });
+      }
+      if (enableMagnetism) {
+        gsap.to(element, { x: 0, y: 0, duration: 0.3, ease: 'power2.out' });
+      }
+    }
+
+    function handleMouseMove(e) {
+      if (!enableTilt && !enableMagnetism) return;
+      const rect = element.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      if (enableTilt) {
+        const rotateX = ((y - centerY) / centerY) * -10;
+        const rotateY = ((x - centerX) / centerX) * 10;
+        gsap.to(element, { rotateX, rotateY, duration: 0.1, ease: 'power2.out', transformPerspective: 1000 });
+      }
+      if (enableMagnetism) {
+        magnetismAnimation = gsap.to(element, {
+          x: (x - centerX) * 0.05,
+          y: (y - centerY) * 0.05,
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      }
+    }
+
+    function handleClick(e) {
+      if (!clickEffect || isNarrow()) return;
+      addRipple(e);
+    }
+
+    element.addEventListener('mouseenter', handleMouseEnter);
+    element.addEventListener('mouseleave', handleMouseLeave);
+    element.addEventListener('mousemove', handleMouseMove);
+    element.addEventListener('click', handleClick);
+  }
+
+  function bindRippleOnly(element, glowRgb) {
+    const g = glowRgb || GLOW_RGB;
+    element.addEventListener('click', (e) => {
+      if (isNarrow()) return;
+      const rect = element.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const maxDistance = Math.max(
+        Math.hypot(x, y),
+        Math.hypot(x - rect.width, y),
+        Math.hypot(x, y - rect.height),
+        Math.hypot(x - rect.width, y - rect.height)
+      );
+      const ripple = document.createElement('div');
+      ripple.style.cssText = [
+        'position:absolute',
+        `width:${maxDistance * 2}px`,
+        `height:${maxDistance * 2}px`,
+        'border-radius:50%',
+        `background:radial-gradient(circle,rgba(${g},0.35) 0%,rgba(${g},0.16) 32%,transparent 72%)`,
+        `left:${x - maxDistance}px`,
+        `top:${y - maxDistance}px`,
+        'pointer-events:none',
+        'z-index:20'
+      ].join(';');
+      element.appendChild(ripple);
+      gsap.fromTo(
+        ripple,
+        { scale: 0, opacity: 1 },
+        {
+          scale: 1,
+          opacity: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          onComplete: () => ripple.remove()
+        }
+      );
+    });
+  }
+
+  function initGlobalSpotlight(spotlightRadius) {
+    const spotlight = document.createElement('div');
+    spotlight.className = 'global-spotlight';
+    document.body.appendChild(spotlight);
+
+    function zones() {
+      return Array.from(document.querySelectorAll('[data-bento-spotlight]'));
+    }
+
+    function resetAllGlow() {
+      document.querySelectorAll('.magic-bento-card').forEach((c) => {
+        c.style.setProperty('--glow-intensity', '0');
+      });
+    }
+
+    function handleMouseMove(e) {
+      let active = null;
+      for (const z of zones()) {
+        const r = z.getBoundingClientRect();
+        if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) {
+          active = z;
+          break;
+        }
+      }
+
+      resetAllGlow();
+
+      if (!active) {
+        gsap.to(spotlight, { opacity: 0, duration: 0.35, ease: 'power2.out' });
+        return;
+      }
+
+      const cards = active.querySelectorAll('.magic-bento-card');
+      const { proximity, fadeDistance } = calculateSpotlightValues(spotlightRadius);
+      let minDistance = Infinity;
+
+      cards.forEach((card) => {
+        const cardRect = card.getBoundingClientRect();
+        const centerX = cardRect.left + cardRect.width / 2;
+        const centerY = cardRect.top + cardRect.height / 2;
+        const distance =
+          Math.hypot(e.clientX - centerX, e.clientY - centerY) - Math.max(cardRect.width, cardRect.height) / 2;
+        const effectiveDistance = Math.max(0, distance);
+        minDistance = Math.min(minDistance, effectiveDistance);
+
+        let glowIntensity = 0;
+        if (effectiveDistance <= proximity) glowIntensity = 1;
+        else if (effectiveDistance <= fadeDistance) {
+          glowIntensity = (fadeDistance - effectiveDistance) / (fadeDistance - proximity);
+        }
+        updateCardGlowProperties(card, e.clientX, e.clientY, glowIntensity, spotlightRadius);
+      });
+
+      const targetOpacity =
+        cards.length === 0
+          ? 0
+          : minDistance <= proximity
+            ? 0.72
+            : minDistance <= fadeDistance
+              ? ((fadeDistance - minDistance) / (fadeDistance - proximity)) * 0.72
+              : 0;
+
+      gsap.to(spotlight, {
+        left: e.clientX,
+        top: e.clientY,
+        xPercent: -50,
+        yPercent: -50,
+        opacity: targetOpacity,
+        duration: targetOpacity > 0 ? 0.18 : 0.4,
+        ease: 'power2.out'
+      });
+    }
+
+    document.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('blur', () => {
+      resetAllGlow();
+      gsap.to(spotlight, { opacity: 0, duration: 0.35 });
+    });
+  }
+
+  if (!isNarrow()) {
+    document.querySelectorAll('.particle-container.magic-bento-card').forEach((el) => {
+      initParticleCard(el, {
+        particleCount: DEFAULT_PARTICLE_COUNT,
+        glowColor: GLOW_RGB,
+        enableTilt: false,
+        enableMagnetism: false,
+        clickEffect: true
+      });
+    });
+
+    document.querySelectorAll('.magic-bento-card:not(.particle-container)').forEach((el) => {
+      bindRippleOnly(el, '30, 61, 47');
+    });
+
+    initGlobalSpotlight(DEFAULT_SPOTLIGHT_RADIUS);
+  }
+})();
+  </script>
   <script>
     const employees = [
       "Маркетолог",
